@@ -39,7 +39,7 @@ html:not(.js) .js-only{display:none}
 kbd{font:600 11px ui-monospace,Consolas,monospace;color:var(--mute)}
 
 /* hero (approved: hero/h18) */
-.hero{min-height:calc(100vh - 62px);display:flex;flex-direction:column;padding:clamp(8px,2.4vh,30px) var(--pad) clamp(20px,4vh,40px)}
+.hero{display:flex;flex-direction:column;padding:clamp(8px,2.4vh,30px) var(--pad) clamp(20px,4vh,40px)}
 h1{font-size:clamp(40px,9.4vw,150px);line-height:.9;text-wrap:balance}h1 span{color:var(--acc)}
 .id{display:flex;flex-wrap:wrap;gap:14px 30px;align-items:center;margin-top:clamp(18px,3.4vh,34px)}.id .sub{flex:1 1 320px;font-size:18px}
 .who{display:flex;align-items:center;gap:12px}.ph{display:block;width:40px;height:40px;border-radius:50%;object-fit:cover}
@@ -190,6 +190,8 @@ html:not(.js) .runsteps .then:before{content:"That night: ";font-weight:700}html
 .pal li[aria-selected=true]{background:var(--fg);color:var(--bg)}.pal li[aria-selected=true] small{color:inherit;opacity:.7}
 
 /* responsive */
+/* fill the first screen only on ordinary landscape screens; on tall or very large ones it left a big empty gap */
+@media(min-width:1001px) and (min-aspect-ratio:3/2) and (max-height:1000px){.hero{min-height:calc(100vh - 62px)}}
 @media(max-width:1240px){.sheets{grid-template-columns:repeat(13,9px)}.hero .x{width:9px;height:11.5px}.p50{grid-template-columns:repeat(25,4px)}.p50 i{width:4px}.p200{grid-template-columns:repeat(40,3px)}}
 @media(max-width:1080px){.nav{display:none}.kl{display:inline}}
 @media(max-width:1000px){.tiles{grid-template-columns:1fr 1fr;gap:22px clamp(18px,3vw,44px)}.t b{font-size:clamp(26px,7.2vw,54px)}

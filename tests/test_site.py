@@ -7,7 +7,8 @@ from playwright.async_api import async_playwright
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ROOT = Path(__file__).resolve().parent.parent
 PAGE = (ROOT / "index.html").as_uri()
-SIZES = {"desktop": (1440, 900), "laptop": (1280, 680), "tablet": (820, 1100), "phone": (390, 844)}
+SIZES = {"desktop": (1440, 900), "laptop": (1280, 680), "tablet": (820, 1100), "phone": (390, 844),
+         "phone-desktop-mode": (980, 2176), "big-monitor": (2560, 1340)}
 FAKE = '{"generated_at":"2026-01-02T03:04:05+00:00","as_of_date":"2026-01-01","source":"test","count":1234,'
 fails = []
 
@@ -32,6 +33,7 @@ async def one(browser, name, size, theme):
         links: [vis('.hero a[href="resume.pdf"]'), vis('.hero a[href*="github.com/Bhavanmehta"]'), vis('.hero a[href*="linkedin.com/in/bhavan-mehta"]'), vis('.hero a[href^="mailto:"]')],
         broken: [...document.querySelectorAll('a[href^="#"]')].map(a => a.getAttribute('href')).filter(x => x.length > 1 && !document.querySelector(x)),
         imgs: [...document.images].filter(i => !i.naturalWidth).length, theme: document.documentElement.getAttribute('data-theme'),
+        gap: Math.round(document.querySelector('.hero .tiles').getBoundingClientRect().top - document.querySelector('.hero .id').getBoundingClientRect().bottom),
         phone: /\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}/.test(t), live: document.querySelector('#lv-us').textContent, pill: document.querySelector('#live-s').textContent };
     }""")
     check(info["title"] == "Bhavan Mehta - Senior Data Engineer", f"{tag}: title")
@@ -42,6 +44,7 @@ async def one(browser, name, size, theme):
     check(not info["broken"], f"{tag}: broken in-page links {info['broken']}")
     check(info["imgs"] == 0, f"{tag}: {info['imgs']} images failed to load")
     check(info["theme"] == theme, f"{tag}: theme follows the system setting")
+    check(info["gap"] <= 160, f"{tag}: {info['gap']}px of empty space between the intro and the number tiles")
     check(not info["phone"], f"{tag}: a phone number is on the page")
     check(info["live"] == "1,234" and info["pill"] == "Live", f"{tag}: live card shows fetched data ({info['live']}, {info['pill']})")
     if size == "desktop":
